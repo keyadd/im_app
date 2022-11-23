@@ -1,0 +1,53 @@
+
+system:
+  env: 'public'  # Change to "develop" to skip authentication for development mode
+  addr: 8881
+  db-type: 'mysql'
+name: "web_app"
+version: v1
+
+# snowflake id config
+snowflake:
+  start_time: "2020-04-03"
+  machine_id: 1
+
+# zap logger configuration
+zap:
+  level: 'info'
+  format: 'console'
+  prefix: '[web_app]'
+  director: 'log'
+  link-name: 'latest_log'
+  show-line: true
+  encode-level: 'LowercaseColorLevelEncoder'
+  stacktrace-key: 'stacktrace'
+  log-in-console: true
+
+
+mysql:
+  path: '127.0.0.1:3306'
+  config: 'charset=utf8mb4&parseTime=True&loc=Local'
+  db-name: 'bluebell'
+  username: 'root'
+  password: 'toor'
+  max-idle-conns: 10
+  max-open-conns: 100
+  log-mode: false
+  log-zap: ""
+
+
+redis:
+  addr: "127.0.0.1:6379"
+  db: 0
+  password: "toor"
+
+
+minio:
+  endpoint: "127.0.0.1:9000"
+  accessKeyID: "1BYtcmFq9NY8BsYm"
+  secretAccessKey: "0S9W9oQ8tPwtO94JLbBN38Ulk2fRUb8I"
+  secure: false
+
+websocket:
+  workerPoolSize:  50
+  maxWorkTaskLen: 1024

@@ -2,8 +2,8 @@ package router
 
 import (
 	v1 "app_ws/api/v1"
-	"app_ws/core/wsmanage"
 	"app_ws/global"
+	"app_ws/initialize/wsmanage"
 	"github.com/gin-gonic/gin"
 )
 

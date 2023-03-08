@@ -1,8 +1,8 @@
 package main
 
 import (
-	"app_ws/core"
 	"app_ws/global"
+	"app_ws/initialize"
 	"app_ws/router"
 	"app_ws/validator"
 	"context"
@@ -19,26 +19,26 @@ import (
 func main() {
 
 	//加载配置文件
-	global.GVA_VP = core.Viper()
+	global.GVA_VP = initialize.Viper()
 	//初始化日志
-	global.GVA_LOG = core.Zap()
+	global.GVA_LOG = initialize.Zap()
 	//初始化Mysql连接
-	//global.SQLX_DB = core.Sqlx()
+	//global.SQLX_DB = initialize.Sqlx()
 	//db := global.SQLX_DB.DB
 	//defer db.Close()
 	//初始化Redis连接
-	//global.GVA_REDIS = core.Redis()
+	//global.GVA_REDIS = initialize.Redis()
 	//defer global.GVA_REDIS.Close()
 	//雪花算法生产唯一ID
-	core.Snowflake()
+	initialize.Snowflake()
 	//validator参数验证
 	global.TRANS = validator.InitTrans("zh")
 
 	// 初使化 minio client对象
-	//global.MINIO = core.InitMinIO()
+	//global.MINIO = initialize.InitMinIO()
 
 	//utils.CreateMinoBuket("userheader")
-	
+
 	//注册路由
 	r := router.Setup()
 

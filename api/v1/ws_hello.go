@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"app_ws/core/wsmanage"
+	"app_ws/initialize/wsmanage"
 	"errors"
 	"fmt"
 	"log"

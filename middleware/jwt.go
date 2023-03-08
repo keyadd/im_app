@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"app_ws/core"
 	"app_ws/global"
+	"app_ws/initialize"
 	"app_ws/utils"
 	"github.com/gin-gonic/gin"
 	"strings"
@@ -31,7 +31,7 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 			return
 		}
 		// parts[1]是获取到的tokenString，我们使用之前定义好的解析JWT的函数来解析它
-		mc, err := core.ParseToken(parts[1])
+		mc, err := initialize.ParseToken(parts[1])
 		if err != nil {
 			utils.ResponseError(c, global.CodeInvalidToken)
 			c.Abort()

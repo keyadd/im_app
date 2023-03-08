@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"app_ws/core/wsmanage"
+	"app_ws/initialize/wsmanage"
 	"log"
 )
 
@@ -9,7 +9,7 @@ type PingRouter struct {
 	*wsmanage.BaseRouter
 }
 
-//Ping Handle
+// Ping Handle
 func (p PingRouter) Handle(request wsmanage.Request) {
 	data := request.GetData()
 	//fmt.Println(data)

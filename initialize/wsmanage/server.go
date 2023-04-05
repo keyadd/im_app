@@ -9,10 +9,6 @@ import (
 	"time"
 )
 
-//type IServer interface {
-//	Serve(w http.ResponseWriter, r *http.Request)
-//}
-
 type Server struct {
 	//Server的消息管理模块
 	MsgHandler MsgHandle
@@ -51,14 +47,6 @@ func (s *Server) Start(w http.ResponseWriter, r *http.Request) {
 				//3.4 启动当前链接的处理业务
 				dealConn.Start()
 			}),
-			Handshake: func(config *websocket.Config, req *http.Request) error {
-				// 解决跨域问题 源码参考 net/websocket/wsmanage.go:110
-				req.Header.Set("Access-Control-Allow-Origin", "*")
-				req.Header.Set("Access-Control-Allow-Headers", "*")
-				req.Header.Set("Access-Control-Allow-Methods", "*")
-				req.Header.Set("content-type", "application/json")
-				return nil
-			},
 		}.ServeHTTP(w, r)
 
 		//fmt.Println("Get conn remote addr = ", wsSocket.RemoteAddr().String())
@@ -76,7 +64,7 @@ func (s *Server) Start(w http.ResponseWriter, r *http.Request) {
 	}()
 }
 
-//停止服务
+// 停止服务
 func (s *Server) Stop() {
 	fmt.Println("[STOP] Websocket wsmanage , name ")
 
@@ -84,7 +72,7 @@ func (s *Server) Stop() {
 	s.ConnMgr.ClearConn()
 }
 
-//运行服务
+// 运行服务
 func (s *Server) Serve(c *gin.Context) {
 	s.Start(c.Writer, c.Request)
 
@@ -94,27 +82,27 @@ func (s *Server) Serve(c *gin.Context) {
 	select {}
 }
 
-//路由功能：给当前服务注册一个路由业务方法，供客户端链接处理使用
+// 路由功能：给当前服务注册一个路由业务方法，供客户端链接处理使用
 func (s *Server) AddRouter(msgId string, router IRouter) {
 	s.MsgHandler.AddRouter(msgId, router)
 }
 
-//得到链接管理
+// 得到链接管理
 func (s *Server) GetConnMgr() ConnManager {
 	return s.ConnMgr
 }
 
-//设置该Server的连接创建时Hook函数
+// 设置该Server的连接创建时Hook函数
 func (s *Server) SetOnConnStart(hookFunc func(Connection)) {
 	s.OnConnStart = hookFunc
 }
 
-//设置该Server的连接断开时的Hook函数
+// 设置该Server的连接断开时的Hook函数
 func (s *Server) SetOnConnStop(hookFunc func(Connection)) {
 	s.OnConnStop = hookFunc
 }
 
-//调用连接OnConnStart Hook函数
+// 调用连接OnConnStart Hook函数
 func (s *Server) CallOnConnStart(conn Connection) {
 	if s.OnConnStart != nil {
 		fmt.Println("---> CallOnConnStart....")
@@ -122,7 +110,7 @@ func (s *Server) CallOnConnStart(conn Connection) {
 	}
 }
 
-//调用连接OnConnStop Hook函数
+// 调用连接OnConnStop Hook函数
 func (s *Server) CallOnConnStop(conn Connection) {
 	if s.OnConnStop != nil {
 		fmt.Println("---> CallOnConnStop....")

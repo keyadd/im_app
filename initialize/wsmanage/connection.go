@@ -25,13 +25,15 @@ type Connection struct {
 	MsgHandle MsgHandle
 	//链接属性
 	property map[string]interface{}
+	//存储当前连接的用户信息
+	Keys map[string]any
 	//保护链接属性修改的锁
-	propertyLock sync.RWMutex
+	mu sync.RWMutex
 
 	mutex sync.Mutex
 }
 
-//初始化链接服务
+// 初始化链接服务
 func NewConnection(server Server, wsSocket *websocket.Conn, connId uint64, msgHandler MsgHandle, r *http.Request) *Connection {
 	c := Connection{
 		Server:      server,
@@ -42,13 +44,15 @@ func NewConnection(server Server, wsSocket *websocket.Conn, connId uint64, msgHa
 		outChan:     make(chan *Message, 1024),
 		ExitChan:    make(chan bool, 1),
 		HttpRequest: r,
+		property:    make(map[string]interface{}, 10),
+		Keys:        make(map[string]any),
 	}
 	mgr := c.Server.GetConnMgr()
 	mgr.Add(c)
 	return &c
 }
 
-//开始
+// 开始
 func (c *Connection) Start() {
 
 	go c.readLoop()
@@ -57,7 +61,7 @@ func (c *Connection) Start() {
 	select {}
 }
 
-//关闭连接
+// 关闭连接
 func (c *Connection) Close() {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
@@ -81,33 +85,33 @@ func (c *Connection) GetHttpRequest() *http.Request {
 	return c.HttpRequest
 }
 
-//获取链接对象
+// 获取链接对象
 func (c *Connection) GetConnection() *websocket.Conn {
 	return c.Conn
 }
 
-//获取链接ID
+// 获取链接ID
 func (c *Connection) GetConnID() uint64 {
 	return c.connId
 }
 
-//获取远程客户端地址信息
+// 获取远程客户端地址信息
 func (c *Connection) RemoteAddr() net.Addr {
 	return c.Conn.RemoteAddr()
 }
 
-//设置链接属性
+// 设置链接属性
 func (c *Connection) SetProperty(key string, value interface{}) {
-	c.propertyLock.Lock()
-	defer c.propertyLock.Unlock()
+	c.mu.Lock()
+	defer c.mu.Unlock()
 
 	c.property[key] = value
 }
 
-//获取链接属性
+// 获取链接属性
 func (c *Connection) GetProperty(key string) (interface{}, error) {
-	c.propertyLock.RLock()
-	defer c.propertyLock.RUnlock()
+	c.mu.RLock()
+	defer c.mu.RUnlock()
 
 	if value, ok := c.property[key]; ok {
 		return value, nil
@@ -116,15 +120,34 @@ func (c *Connection) GetProperty(key string) (interface{}, error) {
 	}
 }
 
-//移除链接属性
+// 移除链接属性
 func (c *Connection) RemoveProperty(key string) {
-	c.propertyLock.Lock()
-	defer c.propertyLock.Unlock()
+	c.mu.Lock()
+	defer c.mu.Unlock()
 
 	delete(c.property, key)
 }
 
-//读websocket
+// 设置用户信息
+func (c *Connection) Set(key string, value any) {
+	c.mu.Lock()
+	if c.Keys == nil {
+		c.Keys = make(map[string]any)
+	}
+
+	c.Keys[key] = value
+	c.mu.Unlock()
+}
+
+// 获取用户信息
+func (c *Connection) Get(key string) (value any, exists bool) {
+	c.mu.RLock()
+	value, exists = c.Keys[key]
+	c.mu.RUnlock()
+	return
+}
+
+// 读websocket
 func (c *Connection) readLoop() {
 
 	for {
@@ -167,7 +190,7 @@ ERR:
 	c.Close()
 }
 
-//写websocket
+// 写websocket
 func (c *Connection) writeLoop() {
 
 	for {

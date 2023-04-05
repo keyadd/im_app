@@ -1,3 +1,4 @@
 log/
 latest_log
 .idea
+tmp/

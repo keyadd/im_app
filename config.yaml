@@ -1,10 +1,10 @@
 
 system:
-  env: 'public'  # Change to "develop" to skip authentication for development mode
+  env: 'debug'
   addr: 8881
   db-type: 'mysql'
-name: "web_app"
-version: v1
+  name: "web_app"
+  version: v1
 
 # snowflake id config
 snowflake:

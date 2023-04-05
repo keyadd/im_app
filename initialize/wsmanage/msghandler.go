@@ -22,7 +22,7 @@ func NewMsgHandle() MsgHandle {
 	return m
 }
 
-//将消息交给TaskQueue,由worker进行处理
+// 将消息交给TaskQueue,由worker进行处理
 func (mh *MsgHandle) SendMsgToTaskQueue(request Request) {
 	//根据ConnID来分配当前的连接应该由哪个worker负责处理
 	//轮询的平均分配法则
@@ -35,7 +35,7 @@ func (mh *MsgHandle) SendMsgToTaskQueue(request Request) {
 	mh.TaskQueue[workerID] <- request
 }
 
-//马上以非阻塞方式处理消息
+// 马上以非阻塞方式处理消息
 func (mh *MsgHandle) DoMsgHandler(request Request) {
 
 	//fmt.Println(request.GetMsgID() + "=======GetMsgID")
@@ -47,7 +47,6 @@ func (mh *MsgHandle) DoMsgHandler(request Request) {
 	//执行对应处理方法
 	err := handler.PreHandle(request)
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 
@@ -56,7 +55,7 @@ func (mh *MsgHandle) DoMsgHandler(request Request) {
 
 }
 
-//为消息添加具体的处理逻辑
+// 为消息添加具体的处理逻辑
 func (mh *MsgHandle) AddRouter(msgId string, router IRouter) {
 	//1 判断当前msg绑定的API处理方法是否已经存在
 	if _, ok := mh.Apis[msgId]; ok {
@@ -66,7 +65,7 @@ func (mh *MsgHandle) AddRouter(msgId string, router IRouter) {
 	mh.Apis[msgId] = router
 }
 
-//启动一个Worker工作流程
+// 启动一个Worker工作流程
 func (mh *MsgHandle) StartOneWorker(workerID int, taskQueue chan Request) {
 	//fmt.Println("Worker ID = ", workerID, " is started.")
 	//不断的等待队列中的消息
@@ -79,7 +78,7 @@ func (mh *MsgHandle) StartOneWorker(workerID int, taskQueue chan Request) {
 	}
 }
 
-//启动worker工作池
+// 启动worker工作池
 func (mh *MsgHandle) StartWorkerPool() {
 	//遍历需要启动worker的数量，依此启动
 	for i := 0; i < int(mh.WorkerPoolSize); i++ {

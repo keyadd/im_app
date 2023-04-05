@@ -3,7 +3,6 @@ package v1
 import (
 	"app_ws/initialize/wsmanage"
 	"errors"
-	"fmt"
 	"log"
 	"time"
 )
@@ -36,7 +35,8 @@ func (h HelloRouter) PreHandle(request wsmanage.Request) error {
 	connection := request.GetConnection()
 	data := connection.GetHttpRequest()
 	getUserAgent := data.Header.Get("User-Agent")
-	fmt.Println(getUserAgent)
+	//fmt.Println(getUserAgent)
+
 	err := connection.SendMessage(request, "消息错误")
 	if err != nil {
 		log.Println(err)

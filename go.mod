@@ -8,13 +8,12 @@ require (
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.5.4
+	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/locales v0.14.0
 	github.com/go-playground/universal-translator v0.18.0
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/go-redis/redis v6.15.9+incompatible
-	github.com/go-sql-driver/mysql v1.6.0
-	github.com/jmoiron/sqlx v1.3.5
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/minio/minio-go/v6 v6.0.57
 	github.com/spf13/viper v1.13.0
@@ -22,6 +21,8 @@ require (
 	github.com/swaggo/gin-swagger v1.5.3
 	go.uber.org/zap v1.23.0
 	golang.org/x/net v0.0.0-20220927171203-f486391704dc
+	gorm.io/driver/mysql v1.4.7
+	gorm.io/gorm v1.24.6
 )
 
 require (
@@ -34,10 +35,13 @@ require (
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
 	github.com/go-openapi/spec v0.20.7 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect
+	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/goccy/go-json v0.9.11 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jonboulle/clockwork v0.3.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect

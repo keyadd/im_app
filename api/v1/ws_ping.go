@@ -12,7 +12,6 @@ type PingRouter struct {
 // Ping Handle
 func (p PingRouter) Handle(request wsmanage.Request) {
 	data := request.GetData()
-	//fmt.Println(data)
 
 	if data == "ping" {
 		connection := request.GetConnection()

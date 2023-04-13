@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"app_ws/global"
 	"go.uber.org/zap"
+	"im_app/global"
 	"os"
 )
 

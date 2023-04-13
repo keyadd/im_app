@@ -1,8 +1,8 @@
 package initialize
 
 import (
-	"app_ws/global"
 	"fmt"
+	"im_app/global"
 	"time"
 
 	sf "github.com/bwmarrin/snowflake"

@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"app_ws/global"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"im_app/global"
 	"net"
 	"net/http"
 	"net/http/httputil"

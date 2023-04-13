@@ -1,9 +1,7 @@
 package v1
 
 import (
-	"app_ws/initialize/wsmanage"
-	"errors"
-	"log"
+	"im_app/initialize/wsmanage"
 	"time"
 )
 
@@ -32,19 +30,19 @@ func (h HelloRouter) Handle(request wsmanage.Request) {
 }
 
 func (h HelloRouter) PreHandle(request wsmanage.Request) error {
-	connection := request.GetConnection()
-	data := connection.GetHttpRequest()
-	getUserAgent := data.Header.Get("User-Agent")
-	//fmt.Println(getUserAgent)
-
-	err := connection.SendMessage(request, "消息错误")
-	if err != nil {
-		log.Println(err)
-	}
-
-	if getUserAgent == "" {
-		return errors.New("获取header 出错")
-	}
+	//connection := request.GetConnection()
+	//data := connection.GetHttpRequest()
+	//getUserAgent := data.Header.Get("User-Agent")
+	////fmt.Println(getUserAgent)
+	//
+	//err := connection.SendMessage(request, "消息错误")
+	//if err != nil {
+	//	log.Println(err)
+	//}
+	//
+	//if getUserAgent == "" {
+	//	return errors.New("获取header 出错")
+	//}
 	return nil
 
 }

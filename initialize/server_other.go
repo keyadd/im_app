@@ -1,10 +1,10 @@
 package initialize
 
 import (
-	"app_ws/global"
 	"fmt"
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
+	"im_app/global"
 	"os"
 	"os/exec"
 	"syscall"

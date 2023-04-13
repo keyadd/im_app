@@ -1,8 +1,8 @@
 package router
 
 import (
-	"app_ws/middleware"
 	"github.com/gin-gonic/gin"
+	"im_app/middleware"
 	"net/http"
 )
 

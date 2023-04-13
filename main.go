@@ -1,12 +1,12 @@
 package main
 
 import (
-	"app_ws/global"
-	"app_ws/initialize"
-	"app_ws/router"
-	"app_ws/validator"
 	"fmt"
 	"go.uber.org/zap"
+	"im_app/global"
+	"im_app/initialize"
+	"im_app/router"
+	"im_app/validator"
 	"time"
 )
 

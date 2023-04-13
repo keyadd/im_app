@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"app_ws/global"
 	"fmt"
 	"github.com/minio/minio-go/v6/pkg/policy"
+	"im_app/global"
 
 	"github.com/minio/minio-go/v6"
 	"go.uber.org/zap"
@@ -47,7 +47,7 @@ func UploadFile(bucketName, objectName string, reader io.Reader, objectSize int6
 	return true
 }
 
-//  GetFileUrl 获取文件url
+// GetFileUrl 获取文件url
 func GetFileUrl(bucketName string, fileName string, expires time.Duration) string {
 	//time.Second*24*60*60
 	reqParams := make(url.Values)

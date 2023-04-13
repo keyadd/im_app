@@ -1,14 +1,13 @@
 package middleware
 
 import (
-	"app_ws/global"
-	"app_ws/initialize"
-	"app_ws/utils"
 	"github.com/gin-gonic/gin"
-	"strings"
+	"im_app/global"
+	"im_app/initialize"
+	"im_app/utils"
 )
 
-const CtxUserIDKey = "userID"
+//const CtxUserIDKey = "userID"
 
 // JWTAuthMiddleware 基于JWT的认证中间件
 func JWTAuthMiddleware() func(c *gin.Context) {
@@ -17,28 +16,35 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 		// 这里假设Token放在Header的Authorization中，并使用Bearer开头
 		// Authorization: Bearer xxxxxxx.xxx.xxx  / X-TOKEN: xxx.xxx.xx
 		// 这里的具体实现方式要依据你的实际业务情况决定
-		authHeader := c.Request.Header.Get("Authorization")
+		TokenHeaderName := global.GVA_CONFIG.JWT.TokenHeaderName
+		//fmt.Println(TokenHeaderName)
+		authHeader := c.Request.Header.Get(TokenHeaderName)
 		if authHeader == "" {
 			utils.ResponseError(c, global.CodeNeedLogin)
 			c.Abort()
 			return
 		}
-		// 按空格分割
-		parts := strings.SplitN(authHeader, " ", 2)
-		if !(len(parts) == 2 && parts[0] == "Bearer") {
-			utils.ResponseError(c, global.CodeInvalidToken)
-			c.Abort()
-			return
-		}
-		// parts[1]是获取到的tokenString，我们使用之前定义好的解析JWT的函数来解析它
-		mc, err := initialize.ParseToken(parts[1])
+
+		// 获取到的tokenString，我们使用之前定义好的解析JWT的函数来解析它
+		mc, err := initialize.ParseToken(authHeader)
 		if err != nil {
 			utils.ResponseError(c, global.CodeInvalidToken)
 			c.Abort()
 			return
 		}
+		token, err := initialize.RefreshToken(mc)
+		if err != nil {
+			utils.ResponseError(c, global.CodeInvalidToken)
+			c.Abort()
+			return
+		}
+		//fmt.Println(token)
+		c.Request.Header.Set("Authorization", token)
+
 		// 将当前请求的userID信息保存到请求的上下文c上
-		c.Set(CtxUserIDKey, mc.UserID)
+		UserIdName := global.GVA_CONFIG.JWT.UserIdName
+		//fmt.Println(UserIdName)
+		c.Set(UserIdName, mc.UserID)
 
 		c.Next() // 后续的处理请求的函数中 可以用过c.Get(CtxUserIDKey) 来获取当前请求的用户信息
 	}

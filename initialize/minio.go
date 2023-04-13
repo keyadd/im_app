@@ -1,9 +1,9 @@
 package initialize
 
 import (
-	"app_ws/global"
 	"fmt"
 	"github.com/minio/minio-go/v6"
+	"im_app/global"
 )
 
 func InitMinIO() (minioClient *minio.Client) {

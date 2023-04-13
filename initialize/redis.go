@@ -1,10 +1,10 @@
 package initialize
 
 import (
-	"app_ws/global"
 	"fmt"
 	"github.com/go-redis/redis"
 	"go.uber.org/zap"
+	"im_app/global"
 	"os"
 )
 

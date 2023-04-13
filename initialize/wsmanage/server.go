@@ -3,7 +3,8 @@ package wsmanage
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/net/websocket"
+	"github.com/gobwas/ws"
+	"im_app/global"
 	"net/http"
 	"sync/atomic"
 	"time"
@@ -27,39 +28,33 @@ func NewServer() *Server {
 	}
 }
 func (s *Server) Start(w http.ResponseWriter, r *http.Request) {
-	//fmt.Printf("[START] Server name: %s,listenner at IP: %s, Port %d is starting\n", s.Name, s.IP, s.Port)
-
 	//开启一个go去做服务端Linster业务
 	go func() {
-
-		//s.MsgHandler.StartWorkerPool()
 
 		//TODO wsmanage.go 应该有一个自动生成ID的方法
 		curConnId := uint64(time.Now().Unix())
 		connId := atomic.AddUint64(&curConnId, 1)
-		//3.1 阻塞等待客户端建立连接请求
-		websocket.Server{
-			Handler: websocket.Handler(func(ws *websocket.Conn) {
-				//初始化连接
-				dealConn := NewConnection(*s, ws, connId, s.MsgHandler, r)
 
-				fmt.Println("Current connId:", connId)
-				//3.4 启动当前链接的处理业务
-				dealConn.Start()
-			}),
-		}.ServeHTTP(w, r)
+		//初始化连接
 
-		//fmt.Println("Get conn remote addr = ", wsSocket.RemoteAddr().String())
-		//3 启动server网络连接业务
+		conn, _, _, err := ws.UpgradeHTTP(r, w)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(s.ConnMgr.Len())
 
 		//3.2 设置服务器最大连接控制,如果超过最大连接，那么则关闭此新的连接
-		/*
-			if s.ConnMgr.Len() >= configs.GConf.MaxConn {
-				wsSocket.Close()
-				continue
-			}
-			**/
+		if s.ConnMgr.Len() >= global.GVA_CONFIG.WebSocket.MaxConnLen {
+			conn.Close()
+			return
+		}
+
+		dealConn := NewConnection(*s, conn, connId, s.MsgHandler, r)
+		fmt.Println("Current connId:", connId)
+		//3.4 启动当前链接的处理业务
 		//3.3 处理该新连接请求的 业务 方法， 此时应该有 handler 和 conn是绑定的
+		dealConn.Start()
 
 	}()
 }

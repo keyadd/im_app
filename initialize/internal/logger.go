@@ -1,12 +1,12 @@
 package internal
 
 import (
-	"app_ws/global"
 	"context"
 	"fmt"
 	"go.uber.org/zap"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/utils"
+	"im_app/global"
 	"io/ioutil"
 	"log"
 	"os"

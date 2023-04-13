@@ -4,9 +4,9 @@
 package utils
 
 import (
-	"app_ws/global"
 	zaprotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"go.uber.org/zap/zapcore"
+	"im_app/global"
 	"os"
 	"path"
 	"time"

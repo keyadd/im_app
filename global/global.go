@@ -1,13 +1,13 @@
 package global
 
 import (
-	"app_ws/config"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-redis/redis"
 	"github.com/minio/minio-go/v6"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"im_app/config"
 )
 
 var (

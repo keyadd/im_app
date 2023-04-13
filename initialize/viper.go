@@ -1,12 +1,12 @@
 package initialize
 
 import (
-	"app_ws/global"
-	"app_ws/utils"
 	"flag"
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
+	"im_app/global"
+	"im_app/utils"
 	"os"
 )
 

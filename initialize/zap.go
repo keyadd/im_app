@@ -1,11 +1,11 @@
 package initialize
 
 import (
-	"app_ws/global"
-	"app_ws/utils"
 	"fmt"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"im_app/global"
+	"im_app/utils"
 	"os"
 	"time"
 )

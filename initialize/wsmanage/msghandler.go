@@ -1,8 +1,8 @@
 package wsmanage
 
 import (
-	"app_ws/global"
 	"fmt"
+	"im_app/global"
 )
 
 type MsgHandle struct {
@@ -30,7 +30,7 @@ func (mh *MsgHandle) SendMsgToTaskQueue(request Request) {
 	//得到需要处理此条连接的workerID
 	connection := request.GetConnection()
 	workerID := connection.GetConnID() % mh.WorkerPoolSize
-	//fmt.Println("Add ConnID=", request.GetConnection().GetConnID(), " request msgID=", request.GetMsgID(), "to workerID=", workerID)
+	fmt.Println("Add ConnID=", connection.GetConnID(), " request msgID=", request.GetMsgID(), "to workerID=", workerID)
 	//将请求消息发送给任务队列
 	mh.TaskQueue[workerID] <- request
 }

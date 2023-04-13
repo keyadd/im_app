@@ -1,13 +1,13 @@
 package initialize
 
 import (
-	"app_ws/global"
-	"app_ws/initialize/internal"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	"im_app/global"
+	"im_app/initialize/internal"
 	"os"
 )
 

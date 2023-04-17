@@ -7,6 +7,7 @@ import (
 	"github.com/gobwas/ws"
 	"github.com/gobwas/ws/wsutil"
 	"im_app/global"
+	"im_app/initialize/media"
 	"net"
 	"net/http"
 	"sync"
@@ -27,9 +28,14 @@ type Connection struct {
 	//存储当前连接的用户信息
 	Keys map[string]any
 	//保护链接属性修改的锁
-	mu sync.RWMutex
-
+	mu    sync.RWMutex
 	mutex sync.Mutex
+
+	//连接音视频属性
+	PubPeers    map[string]*media.WebRTCPeer
+	subPeers    map[string]*media.WebRTCPeer
+	PubPeerLock sync.RWMutex
+	subPeerLock sync.RWMutex
 }
 
 // 初始化链接服务
@@ -44,6 +50,8 @@ func NewConnection(server Server, conn net.Conn, connId uint64, msgHandler MsgHa
 		ExitChan:    make(chan bool, 1),
 		HttpRequest: r,
 		Keys:        make(map[string]any),
+		PubPeers:    make(map[string]*media.WebRTCPeer),
+		subPeers:    make(map[string]*media.WebRTCPeer),
 	}
 	mgr := c.Server.GetConnMgr()
 	mgr.Add(c)
@@ -196,4 +204,59 @@ func (c *Connection) SendMessage(request Request, msgData any) (err error) {
 
 	c.outChan <- message
 	return nil
+}
+
+func (c *Connection) GetWebRTCPeer(id string, sender bool) *media.WebRTCPeer {
+	if sender {
+		c.PubPeerLock.Lock()
+		defer c.PubPeerLock.Unlock()
+		return c.PubPeers[id]
+	} else {
+		c.subPeerLock.Lock()
+		defer c.subPeerLock.Unlock()
+		return c.subPeers[id]
+	}
+}
+
+func (r *Connection) DelWebRTCPeer(id string, sender bool) {
+	if sender {
+		r.PubPeerLock.Lock()
+		defer r.PubPeerLock.Unlock()
+		if r.PubPeers[id] != nil {
+			if r.PubPeers[id].PC != nil {
+				r.PubPeers[id].PC.Close()
+			}
+			r.PubPeers[id].Stop()
+		}
+		delete(r.PubPeers, id)
+	} else {
+		r.subPeerLock.Lock()
+		defer r.subPeerLock.Unlock()
+		if r.subPeers[id] != nil {
+			if r.subPeers[id].PC != nil {
+				r.subPeers[id].PC.Close()
+			}
+			r.subPeers[id].Stop()
+		}
+		delete(r.subPeers, id)
+	}
+
+}
+
+func (c *Connection) AddWebRTCPeer(id string, sender bool) {
+	if sender {
+		c.PubPeerLock.Lock()
+		defer c.PubPeerLock.Unlock()
+		if c.PubPeers[id] != nil {
+			c.PubPeers[id].Stop()
+		}
+		c.PubPeers[id] = media.NewWebRTCPeer(id)
+	} else {
+		c.subPeerLock.Lock()
+		defer c.subPeerLock.Unlock()
+		if c.subPeers[id] != nil {
+			c.subPeers[id].Stop()
+		}
+		c.subPeers[id] = media.NewWebRTCPeer(id)
+	}
 }

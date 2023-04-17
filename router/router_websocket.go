@@ -28,11 +28,10 @@ func InitWebSocketRouter(Router *gin.RouterGroup) {
 		newServer.AddRouter("single_msg", v1.SingleMsg{}) //单聊
 		newServer.AddRouter("room_msg", v1.RoomMsg{})     //群聊
 
-		//即时通讯音视频api p2p视频
-
-		newServer.AddRouter("offer", v1.SingleCandidate{}) //群聊
-		newServer.AddRouter("answer", v1.SingleCandidate{})
-		newServer.AddRouter("candidate", v1.SingleCandidate{})
+		//即时通讯音视频api sfu
+		newServer.AddRouter("publish", v1.Publish{})     //音视频信令交互信息
+		newServer.AddRouter("subscribe", v1.Subscribe{}) //音视频信令交互信息
+		newServer.AddRouter("leave", v1.Leave{})         //视频离开
 
 		UserRouter.GET("/ws", newServer.Serve) //启动连接
 
